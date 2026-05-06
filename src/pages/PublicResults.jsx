@@ -35,14 +35,14 @@ const PublicResults = () => {
 
   const classes = [...new Set(students.map(s => s.className))].filter(Boolean);
 
-  const filteredStudents = students.filter(student => {
-    if (selectedClass && student.className !== selectedClass) return false;
+  const filteredStudents = selectedClass ? students.filter(student => {
+    if (student.className !== selectedClass) return false;
     if (searchTerm) {
       return student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
              student.rollNo.toLowerCase().includes(searchTerm.toLowerCase());
     }
     return true;
-  });
+  }) : [];
 
 
 
@@ -67,7 +67,7 @@ const PublicResults = () => {
               onChange={(e) => setSelectedClass(e.target.value)}
               style={{ width: '100%', appearance: 'none', paddingRight: '40px', cursor: 'pointer' }}
             >
-              <option value="">All Classes</option>
+              <option value="" disabled>Select a Class</option>
               {classes.map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
@@ -145,7 +145,7 @@ const PublicResults = () => {
               ) : (
                 <tr>
                   <td colSpan="7" style={{ textAlign: 'center', padding: '40px', color: 'var(--color-text-muted)' }}>
-                    {selectedClass ? `No students found in ${selectedClass}.` : 'No students found.'}
+                    {selectedClass ? `No students found in ${selectedClass}.` : 'Please select a class to view the results.'}
                   </td>
                 </tr>
               )}
@@ -205,6 +205,7 @@ const PublicResults = () => {
                   <thead>
                     <tr>
                       <th>Subject</th>
+                      <th style={{ textAlign: 'center' }}>Status</th>
                       <th style={{ textAlign: 'right' }}>Marks (out of 100)</th>
                     </tr>
                   </thead>
@@ -212,11 +213,14 @@ const PublicResults = () => {
                     {Object.entries(selectedStudent.subjects).map(([subject, score]) => (
                       <tr key={subject}>
                         <td style={{ textTransform: 'capitalize', fontWeight: 500 }}>{subject}</td>
+                        <td style={{ textAlign: 'center', fontWeight: 600, color: Number(score) >= 35 ? '#16a34a' : '#ef4444' }}>
+                          {Number(score) >= 35 ? 'Pass' : 'Fail'}
+                        </td>
                         <td style={{ textAlign: 'right' }}>{score}</td>
                       </tr>
                     ))}
                     <tr style={{ background: 'var(--color-bg-light)' }}>
-                      <td style={{ fontWeight: 600 }}>Total</td>
+                      <td colSpan="2" style={{ fontWeight: 600 }}>Total</td>
                       <td style={{ textAlign: 'right', fontWeight: 600 }}>
                         {Object.values(selectedStudent.subjects).reduce((a, b) => a + Number(b), 0)} / {Object.keys(selectedStudent.subjects).length * 100}
                       </td>
