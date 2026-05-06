@@ -4,7 +4,6 @@ import { Search, ChevronDown, X, BookOpen, Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { getStudents } from '../lib/api';
-import CountdownTimer from '../components/CountdownTimer';
 
 const PublicResults = () => {
   const [students, setStudents] = useState([]);
@@ -12,17 +11,7 @@ const PublicResults = () => {
   const [selectedClass, setSelectedClass] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [isResultPublished, setIsResultPublished] = useState(false);
   const modalContentRef = useRef(null);
-
-  // Target Date: May 10, 2026, 19:30:00 (7:30 PM local time)
-  const targetDate = new Date('2026-05-10T19:30:00').getTime();
-
-  useEffect(() => {
-    if (+new Date() >= targetDate) {
-      setIsResultPublished(true);
-    }
-  }, [targetDate]);
 
   const handleDownloadPDF = async () => {
     if (!modalContentRef.current) return;
@@ -55,29 +44,7 @@ const PublicResults = () => {
     return true;
   });
 
-  if (!isResultPublished) {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh' }}>
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          style={{ textAlign: 'center', padding: '40px' }}
-        >
-          <h1 style={{ fontSize: '3rem', marginBottom: '16px', color: 'var(--color-primary)' }}>
-            SALAFI MADRASA KARIMBIL
-          </h1>
-          <p style={{ fontSize: '1.2rem', color: 'var(--color-text-secondary)', marginBottom: '60px' }}>
-            The Examination Results will be announced on MAY 10 SUNDAY at 7:30 PM.
-          </p>
-          <CountdownTimer 
-            targetDate={targetDate} 
-            onComplete={() => setIsResultPublished(true)} 
-          />
-        </motion.div>
-      </div>
-    );
-  }
+
 
   return (
     <div>
