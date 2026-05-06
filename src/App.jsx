@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import PublicResults from './pages/PublicResults';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
@@ -9,14 +9,15 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
-function App() {
+const Navigation = () => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem('adminAuth');
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   return (
-    <Router>
       <nav style={{ 
         position: 'fixed', 
         top: 0, 
@@ -45,6 +46,13 @@ function App() {
           )}
         </div>
       </nav>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <Navigation />
 
       <div className="page-wrapper container">
         <Routes>
